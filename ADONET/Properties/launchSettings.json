@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ADONET": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
