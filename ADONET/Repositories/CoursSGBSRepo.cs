@@ -44,5 +44,23 @@ namespace ADONET.Repositories
 
             return list;
         }
+
+        public void Add(Student student)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                string sql = "insert into dbo.Etudiant (ETU_NOM, ETU_PRENOM, ETU_MATRICULE) values ( @Nom , @Prenom , @Matricule)";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Nom", student.LastName);
+                    command.Parameters.AddWithValue("@Prenom", student.FirstName);
+                    command.Parameters.AddWithValue("@Matricule", student.Matricule);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    _logger.LogInformation("{RowsAffected} row(s) inserted.", rowsAffected);
+                }
+            }
+        }
     }
 }

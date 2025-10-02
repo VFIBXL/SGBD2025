@@ -27,5 +27,10 @@ namespace ADONET.Services
             _logger.LogInformation("Exiting GetAll method in StudentsService");
             return students; 
         }
+
+        public void Add(Student student)
+        {
+            _coursSGBSRepo.Add(student);
+        }
     }
 }
