@@ -5,12 +5,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ADONET.Repositories
 {
-    public class CoursSGBSRepo : ICoursSGBSRepo
+  
+    public class CoursSGBSRepo : BaseRepo, ICoursSGBSRepo
     {
         private readonly string _connectionString = @"Server=L575\MSSQL2025;Database=CoursSGBD;User ID=sa;Password=Ephec+2025;TrustServerCertificate=True;";
         private readonly ILogger<CoursSGBSRepo> _logger;
@@ -47,10 +49,11 @@ namespace ADONET.Repositories
 
         public void Add(Student student)
         {
+            string sql = GetFileFromAssemblyAsync("Etudiant_Insert.sql");
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string sql = "insert into dbo.Etudiant (ETU_NOM, ETU_PRENOM, ETU_MATRICULE) values ( @Nom , @Prenom , @Matricule)";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -65,10 +68,11 @@ namespace ADONET.Repositories
 
         public void Delete(int id)
         {
+            string sql = GetFileFromAssemblyAsync("Etudiant_delete.sql");
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string sql = "delete from dbo.Etudiant where ETU_ID = @Id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);

@@ -1,0 +1,1 @@
+﻿delete from dbo.Etudiant where ETU_ID = @Id
