@@ -11,5 +11,6 @@ namespace ADONET.Interfaces
     {
         List<Models.Student> GetAll();
         void Add(Student student);
+        void Remove(int id);
     }
 }
