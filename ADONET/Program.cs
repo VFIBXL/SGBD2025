@@ -59,6 +59,9 @@ namespace ADONET
                     case 2:
                         Delete(studentsService);
                         break;
+                    case 3:
+                        AddChechMatricule(studentsService);
+                        break;
                     default:
                         logger.LogWarning("Invalid choice. Please select 1 to Add or 2 to Delete.");
                         break;
@@ -79,6 +82,15 @@ namespace ADONET
         private static void Delete(IStudentsService studentsService)
         {
             studentsService.Remove(5);
+        }
+
+        private static void AddChechMatricule(IStudentsService studentsService)
+        {
+            Student newStudent = new Student();
+            newStudent.Matricule = "X004";
+            newStudent.FirstName = "Alice4";
+            newStudent.LastName = "Johnson4";
+            studentsService.Add(newStudent);
         }
 
         private static void Add(IStudentsService studentsService)
