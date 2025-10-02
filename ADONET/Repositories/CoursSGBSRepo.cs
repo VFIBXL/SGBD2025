@@ -1,4 +1,5 @@
-﻿using ADONET.Models;
+﻿using ADONET.Interfaces;
+using ADONET.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,19 +10,20 @@ using System.Threading.Tasks;
 
 namespace ADONET.Repositories
 {
-    public class CoursSGBSRepo
+    public class CoursSGBSRepo : ICoursSGBSRepo
     {
         private readonly string _connectionString = @"Server=L575\MSSQL2025;Database=CoursSGBD;User ID=sa;Password=Ephec+2025;TrustServerCertificate=True;";
         private readonly ILogger<CoursSGBSRepo> _logger;
-        public CoursSGBSRepo()
+        public CoursSGBSRepo(ILogger<CoursSGBSRepo> logger)
         {
+            _logger = logger;
         }
 
         public List<Student> GetAll()
         {
             List<Student> list = new List<Student>();
             
-            //_logger.LogDebug("Connecting to database with connection string: {ConnectionString}", _connectionString);
+            _logger.LogInformation("Connecting to database with connection string: {ConnectionString}", _connectionString);
 
             Student student = new Student();
             student.Matricule = "A001";
