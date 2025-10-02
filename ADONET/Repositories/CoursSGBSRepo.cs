@@ -62,5 +62,20 @@ namespace ADONET.Repositories
                 }
             }
         }
+
+        public void Delete(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                string sql = "delete from dbo.Etudiant where ETU_ID = @Id";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    _logger.LogInformation("{RowsAffected} row(s) deleted.", rowsAffected);
+                }
+            }
+        }
     }
 }

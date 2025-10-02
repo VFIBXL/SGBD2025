@@ -32,5 +32,10 @@ namespace ADONET.Services
         {
             _coursSGBSRepo.Add(student);
         }
+
+        public void Remove(int id)
+        {
+            _coursSGBSRepo.Delete(id);
+        }
     }
 }
