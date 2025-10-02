@@ -46,9 +46,34 @@ namespace ADONET
             var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
             var studentsService = serviceProvider.GetRequiredService<IStudentsService>();
 
-            logger.LogInformation("Fetching all students...");
-            studentsService.GetAll();
-            logger.LogInformation("Students fetched successfully.");
+
+            try
+            {
+
+                logger.LogInformation("Fetching all students...");
+                studentsService.GetAll();
+                logger.LogInformation("Students fetched successfully.");
+
+                Student newStudent = new Student();
+                newStudent.Matricule = "A004";
+                newStudent.FirstName = "Alice4";
+                newStudent.LastName = "Johnson4";
+                studentsService.Add(newStudent);
+
+                newStudent.Matricule = "A005";
+                newStudent.FirstName = "Alice5";
+                newStudent.LastName = "Johnson5";
+                studentsService.Add(newStudent);
+
+                newStudent.Matricule = "A005";
+                newStudent.FirstName = "Alice6";
+                newStudent.LastName = "Johnson6";
+                studentsService.Add(newStudent);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while processing students.");
+            }
         }
 
         private static ServiceProvider ConfigureServices()

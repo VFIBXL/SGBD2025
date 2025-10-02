@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ADONET.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace ADONET.Interfaces
     public interface ICoursSGBSRepo
     {
         List<Models.Student> GetAll();
+        void Add(Student student);
     }
 }
