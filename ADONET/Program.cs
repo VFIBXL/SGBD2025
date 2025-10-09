@@ -47,7 +47,20 @@ namespace ADONET
             var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
             var studentsService = serviceProvider.GetRequiredService<IStudentsService>();
 
-            int choice = Convert.ToInt32(args[0]);
+            Console.WriteLine("Select an action:");
+            Console.WriteLine("1 - Add");
+            Console.WriteLine("2 - Delete");
+            Console.WriteLine("3 - Add and check Matricule");
+            Console.WriteLine("4 - Update Student");
+            Console.Write("Your choice: ");
+            var input = Console.ReadLine();
+
+            int choice;
+            if (!int.TryParse(input, out choice))
+            {
+                logger.LogWarning("Invalid input. Please enter a number.");
+                return;
+            }
 
             try
             {
@@ -61,6 +74,9 @@ namespace ADONET
                         break;
                     case 3:
                         AddChechMatricule(studentsService);
+                        break;
+                    case 4:
+                        UpdateStudent(studentsService);
                         break;
                     default:
                         logger.LogWarning("Invalid choice. Please select 1 to Add or 2 to Delete.");
@@ -76,6 +92,27 @@ namespace ADONET
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred while processing students.");
+            }
+        }
+
+
+        private static void UpdateStudent(IStudentsService studentsService)
+        {
+            Console.Write("Enter the ID of the student to delete: ");
+            var input = Console.ReadLine();
+
+            if (int.TryParse(input, out int id))
+            {
+                Student studentToUpdate = new Student();
+                studentToUpdate.Id = id;
+                studentToUpdate.Matricule = "PS003";
+                studentToUpdate.FirstName = "UpdatedName" + id.ToString();
+                studentToUpdate.LastName = "UpdatedLastName" + id.ToString();
+                studentsService.Update(studentToUpdate);
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID. Please enter a valid number.");
             }
         }
 
@@ -117,7 +154,7 @@ namespace ADONET
             var services = new ServiceCollection();
             
             services.AddLogging(configure => configure.AddConsole())
-                    .AddSingleton<ICoursSGBSRepo, CoursSGBSRepo>()
+                    .AddSingleton<IStudentRepo, StudentRepo>()
                     .AddSingleton<IStudentsService, StudentsService>();
 
             return services.BuildServiceProvider();
