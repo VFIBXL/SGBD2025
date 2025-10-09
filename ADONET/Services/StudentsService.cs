@@ -28,6 +28,16 @@ namespace ADONET.Services
             return students; 
         }
 
+        public List<Student> FindStudentsByLastName(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+            {
+                throw new ArgumentException("LastName cannot be null or empty");
+            }
+            List<Student> students = _coursSGBSRepo.FindStudentsByLastName(lastName);
+            return students;
+        }
+
         public void Add(Student student)
         {
             CheckMatricule(student.Matricule);

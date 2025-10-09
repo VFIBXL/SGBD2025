@@ -52,6 +52,8 @@ namespace ADONET
             Console.WriteLine("2 - Delete");
             Console.WriteLine("3 - Add and check Matricule");
             Console.WriteLine("4 - Update Student");
+            Console.WriteLine("5 - Get All Students");
+            Console.WriteLine("6 - Find Students by Last Name");
             Console.Write("Your choice: ");
             var input = Console.ReadLine();
 
@@ -78,16 +80,16 @@ namespace ADONET
                     case 4:
                         UpdateStudent(studentsService);
                         break;
+                    case 5:
+                        GetAllStudent(studentsService);
+                        break;
+                    case 6:
+                        FindStudentsByLastName(studentsService);
+                        break;
                     default:
                         logger.LogWarning("Invalid choice. Please select 1 to Add or 2 to Delete.");
                         break;
                 }
-
-
-                //logger.LogInformation("Fetching all students...");
-                //studentsService.GetAll();
-                //logger.LogInformation("Students fetched successfully.");
-
             }
             catch (Exception ex)
             {
@@ -95,6 +97,39 @@ namespace ADONET
             }
         }
 
+        private static void FindStudentsByLastName(IStudentsService studentsService)
+        {
+            Console.Write("Enter the last name to search: ");
+            var lastName = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(lastName))
+            {
+                Console.WriteLine("LastName cannot be empty.");
+                return;
+            }
+
+            try
+            {
+                var students = studentsService.FindStudentsByLastName(lastName);
+                foreach (var student in students)
+                {
+                    Console.WriteLine($"{student.Id} - {student.Matricule} - {student.FirstName} {student.LastName}");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void GetAllStudent(IStudentsService studentsService)
+        {
+            var students = studentsService.GetAll();
+            foreach (var student in students)
+            {
+                Console.WriteLine($"{student.Id} - {student.Matricule} - {student.FirstName} {student.LastName}");
+            }
+        }
 
         private static void UpdateStudent(IStudentsService studentsService)
         {

@@ -21,29 +21,64 @@ namespace ADONET.Repositories
             _logger = logger;
         }
 
+        public List<Student> FindStudentsByLastName(string lastName)
+        {
+            List<Student> list = new List<Student>();
+            string sql = GetFileFromAssemblyAsync("Etudiant_FindByLastName.sql");
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@lastName", lastName);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var student = new Student
+                            {
+                                Id = Convert.ToInt16(reader["Etu_Id"]),
+                                FirstName = reader["Etu_Prenom"] == DBNull.Value ? null : reader["Etu_Prenom"].ToString(),
+                                Matricule = reader["Etu_Matricule"].ToString(),
+                                LastName = reader["Etu_Nom"] == DBNull.Value ? "" : reader["Etu_Nom"].ToString()
+                            };
+                            list.Add(student);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
         public List<Student> GetAll()
         {
             List<Student> list = new List<Student>();
-            
-            _logger.LogInformation("Connecting to database with connection string: {ConnectionString}", _connectionString);
 
-            Student student = new Student();
-            student.Matricule = "A001";
-            student.FirstName = "John";
-            student.LastName = "Doe";
-            list.Add(student);
-
-            Student student2 = new Student();
-            student2.Matricule = "A002";
-            student2.FirstName = "Jane";
-            student2.LastName = "Smith";
-            list.Add(student2);
+            string sql = GetFileFromAssemblyAsync("Etudiant_SelectAll.sql");
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var student = new Student
+                        {
+                            //Id = reader.GetInt32(reader.GetOrdinal("Etu_Id")),
+                            //Matricule = reader.GetString(reader.GetOrdinal("Etu_Matricule")),
+                            //FirstName = reader.IsDBNull(reader.GetOrdinal("Etu_Prenom")) ? null : reader.GetString(reader.GetOrdinal("Etu_Prenom")),
+                            //LastName = reader.GetString(reader.GetOrdinal("Etu_Nom")),
+                            Id = Convert.ToInt16(reader["Etu_Id"]),
+                            FirstName = reader["Etu_Prenom"] == DBNull.Value ? null : reader["Etu_Prenom"].ToString(),
+                            Matricule = reader["Etu_Matricule"].ToString(),
+                            LastName = reader["Etu_Nom"] == DBNull.Value ? "" : reader["Etu_Nom"].ToString()
+                        };
+                        list.Add(student);
+                    }
+                }
             }
-
             return list;
         }
 
