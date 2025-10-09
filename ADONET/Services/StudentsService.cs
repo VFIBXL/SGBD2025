@@ -41,7 +41,7 @@ namespace ADONET.Services
         public void Add(Student student)
         {
             CheckMatricule(student.Matricule);
-            CheckLastName(student.FirstName);
+            CheckFirstName(student.FirstName);
 
             _coursSGBSRepo.Add(student);
         }
@@ -49,7 +49,7 @@ namespace ADONET.Services
         public void Update(Student student)
         {
             CheckMatricule(student.Matricule);
-            CheckLastName(student.LastName);
+            CheckFirstName(student.FirstName);
 
             _coursSGBSRepo.Update(student);
         }   
@@ -74,11 +74,11 @@ namespace ADONET.Services
             }
         }
 
-        private void CheckLastName(string firstName)
+        private void CheckFirstName(string? firstName)
         {
             if (string.IsNullOrEmpty(firstName))
             {
-                throw new ArgumentException("LastName cannot be null or empty");
+                throw new ArgumentException("FirstName cannot be null or empty");
             }
         }
     }
