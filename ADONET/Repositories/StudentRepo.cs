@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace ADONET.Repositories
 {
   
-    public class CoursSGBSRepo : BaseRepo, ICoursSGBSRepo
+    public class StudentRepo : BaseRepo, IStudentRepo
     {
         private readonly string _connectionString = @"Server=L575\MSSQL2025;Database=CoursSGBD;User ID=sa;Password=Ephec+2025;TrustServerCertificate=True;";
-        private readonly ILogger<CoursSGBSRepo> _logger;
-        public CoursSGBSRepo(ILogger<CoursSGBSRepo> logger)
+        private readonly ILogger<StudentRepo> _logger;
+        public StudentRepo(ILogger<StudentRepo> logger)
         {
             _logger = logger;
         }
@@ -81,5 +81,25 @@ namespace ADONET.Repositories
                 }
             }
         }
+
+        public void Update(Student student)
+        {
+            string sql = GetFileFromAssemblyAsync("Etudiant_update.sql");
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", student.Id);
+                    command.Parameters.AddWithValue("@Matricule", student.Matricule);
+                    command.Parameters.AddWithValue("@Nom", student.LastName);
+                    command.Parameters.AddWithValue("@Prenom", student.FirstName);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    _logger.LogInformation("{RowsAffected} row(s) updated.", rowsAffected);
+                }
+            }
+        }
+
     }
 }

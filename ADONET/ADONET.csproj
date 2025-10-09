@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_update.sql" />
     <EmbeddedResource Include="Repositories\SQL\Etudiant_Insert.sql" />
     <EmbeddedResource Include="Repositories\SQL\Etudiant_delete.sql" />
   </ItemGroup>
