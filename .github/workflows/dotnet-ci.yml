@@ -23,7 +23,7 @@ jobs:
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: ${{ runner.os }}-nuget- 
+          restore-keys: ${{ runner.os }}-nuget-
 
       - name: Restore
         run: dotnet restore
@@ -34,5 +34,36 @@ jobs:
       - name: List discovered tests (debug)
         run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --list-tests
 
-      - name: Run tests and produce TRX
-        run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
+      - name: Run tests, produce TRX and collect coverage
+        run: |
+          dotnet test ./Tests/Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --logger "trx;LogFileName=test_results.trx" \
+            --results-directory ./TestResults \
+            --collect:"XPlat Code Coverage"
+      - name: Install ReportGenerator global tool
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.*
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Find coverage file and generate HTML report
+        shell: bash
+        run: |
+          COVERAGE_FILE=$(find TestResults -type f -name "coverage.cobertura.xml" -print -quit)
+          if [ -z "$COVERAGE_FILE" ]; then
+            echo "Coverage file not found. Listing TestResults for debug:" >&2
+            find TestResults -maxdepth 3 -type f -ls || true
+            exit 1
+          fi
+          echo "Using coverage file: $COVERAGE_FILE"
+          reportgenerator -reports:"$COVERAGE_FILE" -targetdir:CoverageReports -reporttypes:HtmlSummary;Html
+      - name: Upload test results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: CoverageReports
