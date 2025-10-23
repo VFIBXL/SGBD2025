@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InterfacesDLL\InterfacesDLL.csproj" />
+    <ProjectReference Include="..\ModelsDLL\ModelsDLL.csproj" />
+    <ProjectReference Include="..\RepoDLL\RepoDLL.csproj" />
+  </ItemGroup>
+
+</Project>

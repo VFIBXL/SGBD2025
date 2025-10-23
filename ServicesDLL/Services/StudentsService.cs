@@ -1,14 +1,8 @@
-﻿using ADONET.Interfaces;
-using ADONET.Models;
-using ADONET.Repositories;
+﻿using Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models;
 
-namespace ADONET.Services
+namespace Services
 {
     public class StudentsService : IStudentsService
     {

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ADONET.Repositories
+namespace Repositories
 {
     public class BaseRepo
     {

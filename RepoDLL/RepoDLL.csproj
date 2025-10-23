@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_delete.sql" />
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_FindByLastName.sql" />
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_Insert.sql" />
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_SelectAll.sql" />
+    <EmbeddedResource Include="Repositories\SQL\Etudiant_update.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InterfacesDLL\InterfacesDLL.csproj" />
+    <ProjectReference Include="..\ModelsDLL\ModelsDLL.csproj" />
+  </ItemGroup>
+
+</Project>

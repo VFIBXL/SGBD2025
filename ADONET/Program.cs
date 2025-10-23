@@ -1,11 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using ADONET.Interfaces;
-using ADONET.Models;
-using ADONET.Repositories;
-using ADONET.Services;
+using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Models;
+using Repositories;
+using Services;
 using System.ComponentModel;
 
 //var loggerFactory = LoggerFactory.Create(builder =>
