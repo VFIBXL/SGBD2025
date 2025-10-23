@@ -1,7 +1,9 @@
-name: .NET 9 CI - 3 stages (with coverage & test reporting)
+name: .NET 9 CI - coverage
 
 on:
   pull_request:
+    branches: ["main"]
+  push:
     branches: ["main"]
 
 permissions:
@@ -23,7 +25,7 @@ jobs:
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: ${{ runner.os }}-nuget- 
+          restore-keys: ${{ runner.os }}-nuget-
       - name: Restore
         run: dotnet restore
 
@@ -43,13 +45,13 @@ jobs:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: ${{ runner.os }}-nuget-
-      - name: Restore (ensure packages)
+      - name: Restore
         run: dotnet restore
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
   test:
-    name: test (with coverage & reporting)
+    name: test + coverage
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -69,7 +71,7 @@ jobs:
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: Run tests, produce TRX and collect coverage
+      - name: Run tests (TRX) and collect coverage
         run: |
           dotnet test ./Tests/Tests.csproj \
             --configuration Release \
@@ -80,26 +82,27 @@ jobs:
 
       - name: Show TestResults for debug
         run: |
-          echo "Listing TestResults directory:"
+          echo "Listing TestResults:"
           ls -la TestResults || true
-          echo "Show *.trx files:"
-          find TestResults -type f -name "*.trx" -maxdepth 3 -print || true
+          find TestResults -type f -maxdepth 3 -print || true
+
       - name: Upload test results artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: TestResults
 
-      - name: Install ReportGenerator global tool
+      - name: Install ReportGenerator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.*
 
       - name: Add dotnet tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Find coverage file and generate HTML report
+      - name: Generate HTML coverage report
         shell: bash
         run: |
-          COVERAGE_FILE=$(find TestResults -type f -name "coverage.cobertura.xml" -print -quit)
+          # support Cobertura or OpenCover produced by the collector
+          COVERAGE_FILE=$(find TestResults -type f \( -name "coverage.cobertura.xml" -o -name "coverage.opencover.xml" \) -print -quit)
           if [ -z "$COVERAGE_FILE" ]; then
             echo "Coverage file not found. Listing TestResults for debug:" >&2
             find TestResults -type f -ls || true
@@ -113,11 +116,3 @@ jobs:
         with:
           name: coverage-report
           path: CoverageReports
-
-      - name: Upload coverage to Codecov (optional)
-        uses: codecov/codecov-action@v4
-        with:
-          files: TestResults/coverage.cobertura.xml
-          fail_ci_if_error: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
