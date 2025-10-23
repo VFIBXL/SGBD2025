@@ -1,15 +1,10 @@
-﻿using ADONET.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Models;
 
-namespace ADONET.Interfaces
+namespace Interfaces
 {
     public interface IStudentsService
     {
-        List<Models.Student> GetAll();
+        List<Student> GetAll();
         void Add(Student student);
         void Remove(int id);
         void Update(Student student);

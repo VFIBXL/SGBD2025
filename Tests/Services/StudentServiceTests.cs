@@ -1,13 +1,8 @@
-﻿using ADONET.Interfaces;
-using ADONET.Models;
-using ADONET.Services;
+﻿using Interfaces;
 using Microsoft.Extensions.Logging.Abstractions;
+using Models;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Services;
 
 namespace Tests.Services
 {

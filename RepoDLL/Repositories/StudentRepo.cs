@@ -1,15 +1,9 @@
-﻿using ADONET.Interfaces;
-using ADONET.Models;
+﻿using Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Models;
 
-namespace ADONET.Repositories
+namespace Repositories
 {
   
     public class StudentRepo : BaseRepo, IStudentRepo
