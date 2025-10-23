@@ -49,6 +49,10 @@ jobs:
       - name: Find coverage file and generate HTML report
         shell: bash
         run: |
+          if ! command -v reportgenerator >/dev/null 2>&1; then
+            echo "reportgenerator not found in PATH" >&2
+            exit 1
+          fi
           COVERAGE_FILE=$(find TestResults -type f -name "coverage.cobertura.xml" -print -quit)
           if [ -z "$COVERAGE_FILE" ]; then
             echo "Coverage file not found. Listing TestResults for debug:" >&2
@@ -56,7 +60,8 @@ jobs:
             exit 1
           fi
           echo "Using coverage file: $COVERAGE_FILE"
-          reportgenerator -reports:"$COVERAGE_FILE" -targetdir:CoverageReports -reporttypes:HtmlSummary;Html
+          # Quote the reporttypes value so the shell does not split on ';'
+          reportgenerator -reports:"$COVERAGE_FILE" -targetdir:CoverageReports -reporttypes:"HtmlSummary;Html"
       - name: Upload test results artifact
         uses: actions/upload-artifact@v4
         with:
