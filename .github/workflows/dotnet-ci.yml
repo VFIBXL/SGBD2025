@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   restore:
     name: restore
@@ -75,9 +79,11 @@ jobs:
             --collect:"XPlat Code Coverage"
 
       - name: Publish test report to GitHub Tests tab
-        uses: actions/upload-test-report@v1
+        uses: dorny/test-reporter@v1
         with:
+          name: Unit Tests
           path: TestResults/*.trx
+          reporter: vstest
 
       - name: Install ReportGenerator global tool
         run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.*
@@ -115,5 +121,4 @@ jobs:
           files: TestResults/coverage.cobertura.xml
           fail_ci_if_error: true
         env:
-          # For private repos set CODECOV_TOKEN in repository secrets; public repos usually don't require it
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
