@@ -83,7 +83,6 @@ jobs:
         with:
           name: Unit Tests
           path: TestResults/*.trx
-          reporter: vstest
 
       - name: Install ReportGenerator global tool
         run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.*
