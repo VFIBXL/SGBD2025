@@ -19,31 +19,6 @@ namespace Repositories
 
         public List<Student> FindStudentsByLastName(string lastName)
         {
-            //List<Student> list = new List<Student>();
-            //string sql = GetFileFromAssemblyAsync("Etudiant_FindByLastName.sql");
-            //using (SqlConnection connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-            //    using (SqlCommand command = new SqlCommand(sql, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@lastName", lastName);
-            //        using (SqlDataReader reader = command.ExecuteReader())
-            //        {
-            //            while (reader.Read())
-            //            {
-            //                var student = new Student
-            //                {
-            //                    Id = Convert.ToInt16(reader["Etu_Id"]),
-            //                    FirstName = reader["Etu_Prenom"] == DBNull.Value ? null : reader["Etu_Prenom"].ToString(),
-            //                    Matricule = reader["Etu_Matricule"].ToString(),
-            //                    LastName = reader["Etu_Nom"] == DBNull.Value ? "" : reader["Etu_Nom"].ToString()
-            //                };
-            //                list.Add(student);
-            //            }
-            //        }
-            //    }
-            //}
-            
             List<Student> list = new List<Student>();
             string sql = GetFileFromAssemblyAsync("Etudiant_FindByLastNameDapper.sql");
 
@@ -70,22 +45,18 @@ namespace Repositories
 
         public void Add(Student student)
         {
-            //string sql = GetFileFromAssemblyAsync("Etudiant_Insert.sql");
+            string sql = GetFileFromAssemblyAsync("Etudiant_Insert.sql");
 
-            //using (SqlConnection connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
+            Dictionary<string, object> dbArgs = new Dictionary<string, object>();
+            dbArgs.Add("@Nom", student.LastName);
+            dbArgs.Add("@Prenom", student.FirstName);
+            dbArgs.Add("@Matricule", student.Matricule);
 
-            //    using (SqlCommand command = new SqlCommand(sql, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@Nom", student.LastName);
-            //        command.Parameters.AddWithValue("@Prenom", student.FirstName);
-            //        command.Parameters.AddWithValue("@Matricule", student.Matricule);
-            //        int rowsAffected = command.ExecuteNonQuery();
-            //        _logger.LogInformation("{RowsAffected} row(s) inserted.", rowsAffected);
-            //    }
-            //}
-            throw new NotImplementedException();
+            using (IDbConnection connection = new SqlConnection(_connectionString))
+            {
+                int rowsAffected = connection.Execute(sql, dbArgs);
+                _logger.LogInformation("{RowsAffected} row(s) inserted.", rowsAffected);
+            }
         }
 
         public void Delete(int id)
