@@ -6,11 +6,11 @@ using Models;
 namespace Repositories
 {
   
-    public class StudentRepo : BaseRepo, IStudentRepo
+    public class StudentADONETRepo : BaseRepo, IStudentRepo
     {
         private readonly string _connectionString = @"Server=L575\MSSQL2025;Database=CoursSGBD;User ID=sa;Password=Ephec+2025;TrustServerCertificate=True;";
-        private readonly ILogger<StudentRepo> _logger;
-        public StudentRepo(ILogger<StudentRepo> logger)
+        private readonly ILogger<StudentADONETRepo> _logger;
+        public StudentADONETRepo(ILogger<StudentADONETRepo> logger)
         {
             _logger = logger;
         }

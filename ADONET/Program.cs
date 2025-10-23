@@ -168,17 +168,17 @@ namespace ADONET
         private static void Add(IStudentsService studentsService)
         {
             Student newStudent = new Student();
-            newStudent.Matricule = "A004";
+            newStudent.Matricule = "HE004";
             newStudent.FirstName = "Alice4";
             newStudent.LastName = "Johnson4";
             studentsService.Add(newStudent);
 
-            newStudent.Matricule = "A005";
+            newStudent.Matricule = "HE005";
             newStudent.FirstName = "Alice5";
             newStudent.LastName = "Johnson5";
             studentsService.Add(newStudent);
 
-            newStudent.Matricule = "A005";
+            newStudent.Matricule = "HE005";
             newStudent.FirstName = "Alice6";
             newStudent.LastName = "Johnson6";
             studentsService.Add(newStudent);
@@ -189,7 +189,7 @@ namespace ADONET
             var services = new ServiceCollection();
             
             services.AddLogging(configure => configure.AddConsole())
-                    .AddSingleton<IStudentRepo, StudentRepo>()
+                    .AddSingleton<IStudentRepo, StudentDapperRepo>()
                     .AddSingleton<IStudentsService, StudentsService>();
 
             return services.BuildServiceProvider();
