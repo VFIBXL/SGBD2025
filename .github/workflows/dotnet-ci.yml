@@ -23,7 +23,7 @@ jobs:
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: ${{ runner.os }}-nuget-
+          restore-keys: ${{ runner.os }}-nuget- 
 
       - name: Restore
         run: dotnet restore
@@ -31,5 +31,8 @@ jobs:
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test (Release)
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: List discovered tests (debug)
+        run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --list-tests
+
+      - name: Run tests and produce TRX
+        run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
