@@ -1,11 +1,12 @@
-name: .NET 9 CI
+name: .NET 9 CI - 3 stages
 
 on:
   pull_request:
     branches: ["main"]
 
 jobs:
-  ci:
+  restore:
+    name: restore
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,13 +27,59 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    needs: restore
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore (ensure packages available in this job)
+        run: dotnet restore
+
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: List discovered tests (debug)
-        run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --list-tests
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Run tests, produce TRX and collect coverage
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore (needed in this job too)
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests (TRX + coverage)
         run: |
           dotnet test ./Tests/Tests.csproj \
             --configuration Release \
@@ -40,33 +87,9 @@ jobs:
             --logger "trx;LogFileName=test_results.trx" \
             --results-directory ./TestResults \
             --collect:"XPlat Code Coverage"
-      - name: Install ReportGenerator global tool
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.*
-      - name: Add dotnet tools to PATH
-        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-      - name: Find coverage file and generate HTML report
-        shell: bash
-        run: |
-          if ! command -v reportgenerator >/dev/null 2>&1; then
-            echo "reportgenerator not found in PATH" >&2
-            exit 1
-          fi
-          COVERAGE_FILE=$(find TestResults -type f -name "coverage.cobertura.xml" -print -quit)
-          if [ -z "$COVERAGE_FILE" ]; then
-            echo "Coverage file not found. Listing TestResults for debug:" >&2
-            find TestResults -maxdepth 3 -type f -ls || true
-            exit 1
-          fi
-          echo "Using coverage file: $COVERAGE_FILE"
-          # Quote the reporttypes value so the shell does not split on ';'
-          reportgenerator -reports:"$COVERAGE_FILE" -targetdir:CoverageReports -reporttypes:"HtmlSummary;Html"
-      - name: Upload test results artifact
+
+      - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: TestResults
-      - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: CoverageReports
