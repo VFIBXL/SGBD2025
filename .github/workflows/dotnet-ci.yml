@@ -1,8 +1,6 @@
 name: .NET 9 CI
 
 on:
-  push:
-    branches: ["main", "21-tests-sur-github"]
   pull_request:
     branches: ["main"]
 
