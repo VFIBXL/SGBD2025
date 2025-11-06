@@ -17,6 +17,12 @@ namespace Repositories
             _logger = logger;
         }
 
+        public StudentDapperRepo(ILogger<StudentDapperRepo> logger, string connectionString)
+        {
+            _logger = logger;
+            _connectionString = connectionString;
+        }
+
         public List<Student> FindStudentsByLastName(string lastName)
         {
             List<Student> list = new List<Student>();
