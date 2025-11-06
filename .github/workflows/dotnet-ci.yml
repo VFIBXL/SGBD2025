@@ -1,4 +1,4 @@
-name: .NET 9 CI - coverage
+﻿name: .NET 9 CI - coverage
 
 on:
   pull_request:
@@ -116,3 +116,13 @@ jobs:
         with:
           name: coverage-report
           path: CoverageReports
+          # 👇 Affiche un résumé lisible directement dans Checks → Summary
+      - name: Post coverage summary to job
+        run: |
+          echo "## Code Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat CoverageReport/Summary.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "➡️ Rapport HTML complet disponible dans l'artifact **coverage-report**." >> $GITHUB_STEP_SUMMARY
