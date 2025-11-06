@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET 9
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
       - name: Cache NuGet packages
@@ -98,10 +98,10 @@ jobs:
       - name: Add dotnet tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Generate HTML coverage report
+      - name: Generate coverage reports (HTML + TextSummary)
         shell: bash
         run: |
-          # support Cobertura or OpenCover produced by the collector
+          # Cherche un fichier Cobertura/OpenCover produit par le collecteur
           COVERAGE_FILE=$(find TestResults -type f \( -name "coverage.cobertura.xml" -o -name "coverage.opencover.xml" \) -print -quit)
           if [ -z "$COVERAGE_FILE" ]; then
             echo "Coverage file not found. Listing TestResults for debug:" >&2
@@ -109,20 +109,25 @@ jobs:
             exit 1
           fi
           echo "Using coverage file: $COVERAGE_FILE"
-          reportgenerator -reports:"$COVERAGE_FILE" -targetdir:CoverageReports -reporttypes:"HtmlSummary;Html"
+          # ⚠️ Génère aussi le résumé texte (Summary.txt)
+          reportgenerator \
+            -reports:"$COVERAGE_FILE" \
+            -targetdir:CoverageReports \
+            -reporttypes:"Html;TextSummary"
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: CoverageReports
-          # 👇 Affiche un résumé lisible directement dans Checks → Summary
+
       - name: Post coverage summary to job
         run: |
           echo "## Code Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat CoverageReport/Summary.txt >> $GITHUB_STEP_SUMMARY
+          # ⚠️ Dossier correct + fichier créé par TextSummary
+          cat CoverageReports/Summary.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "➡️ Rapport HTML complet disponible dans l'artifact **coverage-report**." >> $GITHUB_STEP_SUMMARY
