@@ -67,39 +67,36 @@ namespace Repositories
 
         public void Delete(int id)
         {
-            //string sql = GetFileFromAssemblyAsync("Etudiant_delete.sql");
+            string sql = GetFileFromAssemblyAsync("Kot_Delete.sql");
 
-            //using (SqlConnection connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-            //    using (SqlCommand command = new SqlCommand(sql, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@Id", id);
-            //        int rowsAffected = command.ExecuteNonQuery();
-            //        _logger.LogInformation("{RowsAffected} row(s) deleted.", rowsAffected);
-            //    }
-            //}
-            throw new NotImplementedException();
+            Dictionary<string, object> dbArgs = new Dictionary<string, object>();
+            dbArgs.Add("@Id", id);
+
+            using (IDbConnection connection = new SqlConnection(_connectionString))
+            {
+                int rowsAffected = connection.Execute(sql, dbArgs);
+                _logger.LogInformation("{RowsAffected} row(s) deleted.", rowsAffected);
+            }
         }
 
         //public void Update(Student student)
         //{
-            //string sql = GetFileFromAssemblyAsync("Etudiant_update.sql");
+        //string sql = GetFileFromAssemblyAsync("Etudiant_update.sql");
 
-            //using (SqlConnection connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-            //    using (SqlCommand command = new SqlCommand(sql, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@Id", student.Id);
-            //        command.Parameters.AddWithValue("@Matricule", student.Matricule);
-            //        command.Parameters.AddWithValue("@Nom", student.LastName);
-            //        command.Parameters.AddWithValue("@Prenom", student.FirstName);
-            //        int rowsAffected = command.ExecuteNonQuery();
-            //        _logger.LogInformation("{RowsAffected} row(s) updated.", rowsAffected);
-            //    }
-            //}
-            //throw new NotImplementedException();
+        //using (SqlConnection connection = new SqlConnection(_connectionString))
+        //{
+        //    connection.Open();
+        //    using (SqlCommand command = new SqlCommand(sql, connection))
+        //    {
+        //        command.Parameters.AddWithValue("@Id", student.Id);
+        //        command.Parameters.AddWithValue("@Matricule", student.Matricule);
+        //        command.Parameters.AddWithValue("@Nom", student.LastName);
+        //        command.Parameters.AddWithValue("@Prenom", student.FirstName);
+        //        int rowsAffected = command.ExecuteNonQuery();
+        //        _logger.LogInformation("{RowsAffected} row(s) updated.", rowsAffected);
+        //    }
+        //}
+        //throw new NotImplementedException();
         //}
 
     }

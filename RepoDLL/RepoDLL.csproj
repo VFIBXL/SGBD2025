@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Repositories\SQL\Kot_Delete.sql" />
     <EmbeddedResource Include="Repositories\SQL\Etudiant_delete.sql" />
     <EmbeddedResource Include="Repositories\SQL\Etudiant_FindByLastNameDapper.sql" />
     <EmbeddedResource Include="Repositories\SQL\Etudiant_Insert.sql" />

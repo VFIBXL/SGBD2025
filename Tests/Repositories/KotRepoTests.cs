@@ -1,6 +1,7 @@
 ﻿using DotNet.Testcontainers.Builders;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging.Abstractions;
+using ModelsDLL.DTO;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,25 @@ namespace Tests.RepositoriesTests
             Assert.NotNull(kots);
             Assert.NotEmpty(kots);
             Assert.Equal(2, kots.Count);
+        }
+
+        [Fact]
+        public async Task DeleteTest()
+        {
+            await dBSetup.InitKotsDataAsync();
+            // instantiate repo with NullLogger and injected connection string
+            var logger = NullLogger<Repositories.KotRepo>.Instance;
+            var repo = new Repositories.KotRepo(logger, _connectionString);
+            
+            // act
+            repo.Delete(1);
+            // assert
+
+            List<KotStudentDTO> kots = repo.GetAll();
+
+            var kot = kots.FirstOrDefault( x=> x.KOT_ID == 1);
+
+            Assert.Null(kot);
         }
     }
 }
