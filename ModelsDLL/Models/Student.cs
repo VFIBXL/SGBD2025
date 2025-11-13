@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelsDLL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Models
         public string? FirstName { get; set; }
         public string LastName { get; set; }
         public Student() { }
+
+        public ICollection<Kot>? Kots { get; set; }
     }
 }

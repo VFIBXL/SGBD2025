@@ -2,68 +2,68 @@
 using Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Models;
+using ModelsDLL.DTO;
 using System.Data;
 
 namespace Repositories
 {
   
-    public class StudentDapperRepo : BaseRepo, IStudentRepo
+    public class KotRepo : BaseRepo, IKotRepo
     {
         private readonly string _connectionString = @"Server=L575\MSSQL2025;Database=CoursSGBD;User ID=sa;Password=Ephec+2025;TrustServerCertificate=True;";
-        private readonly ILogger<StudentDapperRepo> _logger;
-        public StudentDapperRepo(ILogger<StudentDapperRepo> logger)
+        private readonly ILogger<KotRepo> _logger;
+        public KotRepo(ILogger<KotRepo> logger)
         {
             _logger = logger;
         }
 
-        public StudentDapperRepo(ILogger<StudentDapperRepo> logger, string connectionString)
+        public KotRepo(ILogger<KotRepo> logger, string connectionString)
         {
             _logger = logger;
             _connectionString = connectionString;
         }
 
-        public List<Student> FindStudentsByLastName(string lastName)
+        //public List<Student> FindStudentsByLastName(string lastName)
+        //{
+        //    List<Student> list = new List<Student>();
+        //    string sql = GetFileFromAssemblyAsync("Etudiant_FindByLastNameDapper.sql");
+
+        //    Dictionary<string, object> dbArgs = new Dictionary<string, object>();
+        //    dbArgs.Add("@lastName", lastName);
+
+        //    using (IDbConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        list = connection.Query<Student>(sql, dbArgs).ToList();
+        //    }
+        //    return list;
+        //}
+
+        public List<KotStudentDTO> GetAll()
         {
-            List<Student> list = new List<Student>();
-            string sql = GetFileFromAssemblyAsync("Etudiant_FindByLastNameDapper.sql");
-
-            Dictionary<string, object> dbArgs = new Dictionary<string, object>();
-            dbArgs.Add("@lastName", lastName);
-
+            List<KotStudentDTO> kots = new List<KotStudentDTO>();
+            string sql = GetFileFromAssemblyAsync("Kot_SelectAll.sql");
             using (IDbConnection connection = new SqlConnection(_connectionString))
             {
-                list = connection.Query<Student>(sql, dbArgs).ToList();
+                kots = connection.Query<KotStudentDTO>(sql).ToList();
             }
-            return list;
+            return kots;
         }
 
-        public List<Student> GetAll()
-        {
-            List<Student> students = new List<Student>();
-            string sql = GetFileFromAssemblyAsync("Etudiant_SelectAllDapper.sql");
-            using (IDbConnection connection = new SqlConnection(_connectionString))
-            {
-                students = connection.Query<Student>(sql).ToList();
-            }
-            return students;
-        }
+        //public void Add(Student student)
+        //{
+        //    string sql = GetFileFromAssemblyAsync("Etudiant_Insert.sql");
 
-        public void Add(Student student)
-        {
-            string sql = GetFileFromAssemblyAsync("Etudiant_Insert.sql");
+        //    Dictionary<string, object> dbArgs = new Dictionary<string, object>();
+        //    dbArgs.Add("@Nom", student.LastName);
+        //    dbArgs.Add("@Prenom", student.FirstName);
+        //    dbArgs.Add("@Matricule", student.Matricule);
 
-            Dictionary<string, object> dbArgs = new Dictionary<string, object>();
-            dbArgs.Add("@Nom", student.LastName);
-            dbArgs.Add("@Prenom", student.FirstName);
-            dbArgs.Add("@Matricule", student.Matricule);
-
-            using (IDbConnection connection = new SqlConnection(_connectionString))
-            {
-                int rowsAffected = connection.Execute(sql, dbArgs);
-                _logger.LogInformation("{RowsAffected} row(s) inserted.", rowsAffected);
-            }
-        }
+        //    using (IDbConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        int rowsAffected = connection.Execute(sql, dbArgs);
+        //        _logger.LogInformation("{RowsAffected} row(s) inserted.", rowsAffected);
+        //    }
+        //}
 
         public void Delete(int id)
         {
@@ -82,8 +82,8 @@ namespace Repositories
             throw new NotImplementedException();
         }
 
-        public void Update(Student student)
-        {
+        //public void Update(Student student)
+        //{
             //string sql = GetFileFromAssemblyAsync("Etudiant_update.sql");
 
             //using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -99,8 +99,8 @@ namespace Repositories
             //        _logger.LogInformation("{RowsAffected} row(s) updated.", rowsAffected);
             //    }
             //}
-            throw new NotImplementedException();
-        }
+            //throw new NotImplementedException();
+        //}
 
     }
 }

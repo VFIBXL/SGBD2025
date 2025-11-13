@@ -31,8 +31,8 @@ namespace Tests.RepositoriesTests
             await dBSetup.InitStudentsDataAsync();
 
             // instantiate repo with NullLogger and injected connection string
-            var logger = NullLogger<Repositories.StudentDapperRepo>.Instance;
-            var repo = new Repositories.StudentDapperRepo(logger, _connectionString);
+            var logger = NullLogger<Repositories.StudentRepo>.Instance;
+            var repo = new Repositories.StudentRepo(logger, _connectionString);
 
             // act
             var students = repo.GetAll();
@@ -53,8 +53,8 @@ namespace Tests.RepositoriesTests
             await dBSetup.InitStudentsDataAsync();
 
             // instantiate repo with NullLogger and injected connection string
-            var logger = NullLogger<Repositories.StudentDapperRepo>.Instance;
-            var repo = new Repositories.StudentDapperRepo(logger, _connectionString);
+            var logger = NullLogger<Repositories.StudentRepo>.Instance;
+            var repo = new Repositories.StudentRepo(logger, _connectionString);
 
             // act
             var students = repo.FindStudentsByLastName(search);
