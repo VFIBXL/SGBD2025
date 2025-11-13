@@ -4,8 +4,10 @@ using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Models;
+using ModelsDLL.Profiles;
 using Repositories;
 using Services;
+using ServicesDLL.Services;
 using System.ComponentModel;
 
 //var loggerFactory = LoggerFactory.Create(builder =>
@@ -46,6 +48,7 @@ namespace ADONET
 
             var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
             var studentsService = serviceProvider.GetRequiredService<IStudentsService>();
+            var kotsService = serviceProvider.GetRequiredService<IKotService>();
 
             Console.WriteLine("Select an action:");
             Console.WriteLine("1 - Add");
@@ -86,6 +89,10 @@ namespace ADONET
                     case 6:
                         FindStudentsByLastName(studentsService);
                         break;
+                    case 7:
+                        kotsService.GetAll();
+                        break;
+
                     default:
                         logger.LogWarning("Invalid choice. Please select 1 to Add or 2 to Delete.");
                         break;
@@ -187,9 +194,13 @@ namespace ADONET
         private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            
+
+            services.AddAutoMapper(cfg => { }, typeof(KotProfile));
+
             services.AddLogging(configure => configure.AddConsole())
-                    .AddSingleton<IStudentRepo, StudentDapperRepo>()
+                    .AddSingleton<IStudentRepo, StudentRepo>()
+                    .AddSingleton<IKotRepo, KotRepo>()
+                    .AddSingleton<IKotService, KotService>()
                     .AddSingleton<IStudentsService, StudentsService>();
 
             return services.BuildServiceProvider();
