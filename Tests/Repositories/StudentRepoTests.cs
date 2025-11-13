@@ -1,6 +1,8 @@
 ﻿using DotNet.Testcontainers.Builders;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging.Abstractions;
+using Models;
+using ModelsDLL.DTO;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,8 @@ using Tests.Shared;
 
 namespace Tests.RepositoriesTests
 {
-    public class StudentRepoTests: IClassFixture<Shared.DatabaseFixture>
+    [Collection("IntegrationDB")]
+    public class StudentRepoTests
     {
         private readonly Shared.DatabaseFixture _fixture;
         private string _connectionString;
@@ -60,6 +63,40 @@ namespace Tests.RepositoriesTests
             var students = repo.FindStudentsByLastName(search);
 
             Assert.Equal(result, students.Count);
+        }
+
+        [Theory]
+        [InlineData(3)]
+        [InlineData(5)]
+        [InlineData(999)]
+        public async Task DeleteTest(int id)
+        {
+            await dBSetup.InitKotsDataAsync();
+            // instantiate repo with NullLogger and injected connection string
+            var logger = NullLogger<Repositories.StudentRepo>.Instance;
+            var repo = new Repositories.StudentRepo(logger, _connectionString);
+
+            // act
+            repo.Delete(id);
+
+            List<Student> students = repo.GetAll();
+
+            var student = students.FirstOrDefault(x => x.Id == id);
+
+            Assert.Null(student);
+        }
+
+        [Fact]
+        public async Task DeleteThatThrowsException()
+        {
+            await dBSetup.InitKotsDataAsync();
+
+            // instantiate repo with NullLogger and injected connection string
+            var logger = NullLogger<Repositories.StudentRepo>.Instance;
+            var repo = new Repositories.StudentRepo(logger, _connectionString);
+
+            var ex = Assert.ThrowsAny<Exception>(() => repo.Delete(6));
+            Assert.NotNull(ex);
         }
     }
 }

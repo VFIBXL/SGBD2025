@@ -67,19 +67,16 @@ namespace Repositories
 
         public void Delete(int id)
         {
-            //string sql = GetFileFromAssemblyAsync("Etudiant_delete.sql");
+            string sql = GetFileFromAssemblyAsync("Etudiant_delete.sql");
 
-            //using (SqlConnection connection = new SqlConnection(_connectionString))
-            //{
-            //    connection.Open();
-            //    using (SqlCommand command = new SqlCommand(sql, connection))
-            //    {
-            //        command.Parameters.AddWithValue("@Id", id);
-            //        int rowsAffected = command.ExecuteNonQuery();
-            //        _logger.LogInformation("{RowsAffected} row(s) deleted.", rowsAffected);
-            //    }
-            //}
-            throw new NotImplementedException();
+            Dictionary<string, object> dbArgs = new Dictionary<string, object>();
+            dbArgs.Add("@Id", id);
+
+            using (IDbConnection connection = new SqlConnection(_connectionString))
+            {
+                int rowsAffected = connection.Execute(sql, dbArgs);
+                _logger.LogInformation("{RowsAffected} row(s) deleted.", rowsAffected);
+            }
         }
 
         public void Update(Student student)

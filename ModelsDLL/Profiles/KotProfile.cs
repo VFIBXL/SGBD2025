@@ -23,7 +23,7 @@ namespace ModelsDLL.Profiles
             CreateMap<KotStudentDTO, Kot>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.KOT_ID))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KOT_NAME))
-                .ForMember(d => d.Resident, opt => opt.MapFrom(s => s));
+                .ForMember(d => d.Resident, opt => opt.MapFrom(s => string.IsNullOrWhiteSpace(s.ETU_MATRICULE) ? null : s));
         }
     }
 }
