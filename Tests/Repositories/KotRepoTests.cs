@@ -13,7 +13,8 @@ using Tests.Shared;
 
 namespace Tests.RepositoriesTests
 {
-    public class KotRepoTests: IClassFixture<Shared.DatabaseFixture>
+    [Collection("IntegrationDB")]
+    public class KotRepoTests
     {
         private readonly Shared.DatabaseFixture _fixture;
         private string _connectionString;

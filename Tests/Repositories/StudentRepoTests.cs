@@ -13,7 +13,8 @@ using Tests.Shared;
 
 namespace Tests.RepositoriesTests
 {
-    public class StudentRepoTests: IClassFixture<Shared.DatabaseFixture>
+    [Collection("IntegrationDB")]
+    public class StudentRepoTests
     {
         private readonly Shared.DatabaseFixture _fixture;
         private string _connectionString;

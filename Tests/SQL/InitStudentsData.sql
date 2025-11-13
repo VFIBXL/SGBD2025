@@ -1,5 +1,6 @@
 ﻿USE [CoursSGBD]
 
+delete from [dbo].[Kot]
 delete from [dbo].[Etudiant]
 
 insert into [dbo].[Etudiant]  ([ETU_NOM], [ETU_PRENOM], [ETU_MATRICULE])
